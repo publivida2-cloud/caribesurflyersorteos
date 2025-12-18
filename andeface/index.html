@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juega y gana con CaribeSurFlyer</title>
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  text-align:center;
+  padding:40px;
+  background:#e1f7f5;
+}
+h1{color:#008577}
+button{
+  background:#00a896;
+  color:white;
+  border:none;
+  padding:15px 28px;
+  margin:12px;
+  border-radius:12px;
+  font-size:1.1em;
+  cursor:pointer;
+}
+.message{margin-top:25px;font-weight:bold}
+</style>
+</head>
+
+<body>
+
+<h1>🎉 Juega y gana con CaribeSurFlyer 🎉</h1>
+<p>Escanea y prueba tu suerte<br>o entra directo al negocio</p>
+
+<button id="play">🎲 JUGAR</button>
+<button id="skip">➡️ IR DIRECTO</button>
+
+<div class="message" id="msg"></div>
+
+<script>
+/* ===== CONFIG NEGOCIO ===== */
+const whatsapp = "50684035858";
+const prize = "10% de descuento";
+const redirectUrl = "https://www.facebook.com/profile.php?id=61566907761399/";
+const storageKey = "lastPlay_andeface";
+/* ========================= */
+
+function canPlay(){
+  const last = localStorage.getItem(storageKey);
+  return !last || (Date.now()-last) > 86400000;
+}
+
+document.getElementById("skip").onclick=()=>location.href=redirectUrl;
+
+document.getElementById("play").onclick=()=>{
+  if(!canPlay()){
+    alert("Ya participaste hoy");
+    location.href=redirectUrl;
+    return;
+  }
+
+  localStorage.setItem(storageKey,Date.now());
+  msg.innerHTML="🎰 Jugando...";
+
+  setTimeout(()=>{
+    if(Math.random()<0.5){
+      msg.innerHTML="🎉 ¡Ganaste! Abriendo WhatsApp...";
+      const text=`¡Hola! Gané el sorteo de ${prize}.`;
+      window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(text)}`,"_blank");
+      location.href=redirectUrl;
+    }else{
+      msg.innerHTML="😢 No ganaste esta vez";
+      setTimeout(()=>location.href=redirectUrl,2000);
+    }
+  },2500);
+}
+</script>
+
+</body>
+</html>
