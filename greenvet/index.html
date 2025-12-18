@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juega y gana con CaribeSurFlyer</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+      background: #e1f7f5;
+      color: #333;
+    }
+    h1 {
+      color: #008577;
+      font-size: 1.6em;
+    }
+    button {
+      background-color: #00a896;
+      color: white;
+      border: none;
+      padding: 16px 30px;
+      margin: 14px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 1.1em;
+    }
+    button:hover {
+      filter: brightness(0.95);
+    }
+    .message {
+      margin-top: 25px;
+      font-size: 1.1em;
+      font-weight: bold;
+      min-height: 48px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🎉 Juega y gana con CaribeSurFlyer 🎉</h1>
+
+  <p>
+    Escanea y prueba tu suerte.<br>
+    Si no deseas jugar, puedes ir directamente al negocio.
+  </p>
+
+  <button id="playButton">🎲 JUGAR</button>
+  <button id="skipButton">➡️ IR DIRECTO</button>
+
+  <div class="message" id="message"></div>
+
+  <script>
+    /********************************************************
+     * 🔧 CONFIG DEL NEGOCIO (SOLO CAMBIAR ESTO)
+     ********************************************************/
+    const BUSINESS_ID  = "greenvet";        // sin espacios, sin tildes
+    const WHATSAPP     = "50670057723";             // solo números
+    const PRIZE        = "10% de descuento en consulta o productos seleccionados";        // texto libre
+    const REDIRECT_URL = "https://www.facebook.com/greenvet.cahuita"; // Facebook o Instagram
+    /********************************************************/
+
+    const playButton = document.getElementById("playButton");
+    const skipButton = document.getElementById("skipButton");
+    const messageBox = document.getElementById("message");
+
+    const STORAGE_KEY = "lastPlay_" + BUSINESS_ID;
+
+    function canPlay() {
+      const lastPlay = localStorage.getItem(STORAGE_KEY);
+      if (!lastPlay) return true;
+      const hours = (Date.now() - parseInt(lastPlay, 10)) / (1000 * 60 * 60);
+      return hours >= 24;
+    }
+
+    function savePlay() {
+      localStorage.setItem(STORAGE_KEY, Date.now().toString());
+    }
+
+    function redirectToBusiness(seconds = 2) {
+      setTimeout(() => {
+        window.location.href = REDIRECT_URL;
+      }, seconds * 1000);
+    }
+
+    function buildWhatsAppUrl() {
+      const text =
+        `¡Hola! He ganado el sorteo de ${PRIZE} en CaribeSurFlyer.\n` +
+        `Según las reglas:\n` +
+        `- Debo enviar este mensaje antes de canjear (mínimo 2h después).\n` +
+        `- Tengo hasta 1 mes para canjearlo.\n` +
+        `Gracias.`;
+
+      return "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(text);
+    }
+
+    skipButton.addEventListener("click", () => {
+      window.location.href = REDIRECT_URL;
+    });
+
+    playButton.addEventListener("click", () => {
+
+      if (!canPlay()) {
+        alert("Ya participaste hoy.");
+        redirectToBusiness(0);
+        return;
+      }
+
+      savePlay();
+      messageBox.innerHTML = "🎰 Jugando...";
+
+      setTimeout(() => {
+        const win = Math.random() < 0.5; // 50% exacto
+
+        if (win) {
+          messageBox.innerHTML = "🎉 ¡Ganaste! Abriendo WhatsApp...";
+          window.open(buildWhatsAppUrl(), "_blank");
+          redirectToBusiness(1);
+        } else {
+          messageBox.innerHTML = "😢 No ganaste esta vez.";
+          redirectToBusiness(2);
+        }
+      }, 2500);
+    });
+  </script>
+
+</body>
+</html>
