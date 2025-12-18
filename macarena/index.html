@@ -1,80 +1,131 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Juega y gana con CaribeSurFlyer</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juega y gana con CaribeSurFlyer</title>
 
-<style>
-body{
-  font-family: Arial, sans-serif;
-  text-align:center;
-  padding:40px;
-  background:#e1f7f5;
-}
-h1{color:#008577}
-button{
-  background:#00a896;
-  color:white;
-  border:none;
-  padding:15px 28px;
-  margin:12px;
-  border-radius:12px;
-  font-size:1.1em;
-  cursor:pointer;
-}
-.message{margin-top:25px;font-weight:bold}
-</style>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+      background: #e1f7f5;
+      color: #333;
+    }
+    h1 {
+      color: #008577;
+      font-size: 1.6em;
+    }
+    button {
+      background-color: #00a896;
+      color: white;
+      border: none;
+      padding: 16px 30px;
+      margin: 14px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 1.1em;
+    }
+    button:hover {
+      filter: brightness(0.95);
+    }
+    .message {
+      margin-top: 25px;
+      font-size: 1.1em;
+      font-weight: bold;
+      min-height: 48px;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>🎉 Juega y gana con CaribeSurFlyer 🎉</h1>
-<p>Escanea y prueba tu suerte<br>o entra directo al negocio</p>
+  <h1>🎉 Juega y gana con CaribeSurFlyer 🎉</h1>
 
-<button id="play">🎲 JUGAR</button>
-<button id="skip">➡️ IR DIRECTO</button>
+  <p>
+    Escanea y prueba tu suerte.<br>
+    Si no deseas jugar, puedes ir directamente al negocio.
+  </p>
 
-<div class="message" id="msg"></div>
+  <button id="playButton">🎲 JUGAR</button>
+  <button id="skipButton">➡️ IR DIRECTO</button>
 
-<script>
-/* ===== CONFIG NEGOCIO ===== */
-const whatsapp = "50687850299";
-const prize = "15% de descuento";
-const redirectUrl = "https://www.facebook.com/profile.php?id=61581522908261/";
-const storageKey = "lastPlay_macarena";
-/* ========================= */
+  <div class="message" id="message"></div>
 
-function canPlay(){
-  const last = localStorage.getItem(storageKey);
-  return !last || (Date.now()-last) > 86400000;
-}
+  <script>
+    /********************************************************
+     * 🔧 CONFIG DEL NEGOCIO (SOLO CAMBIAR ESTO)
+     ********************************************************/
+    const BUSINESS_ID  = "macarena";        // sin espacios, sin tildes
+    const WHATSAPP     = "50687850299";             // solo números
+    const PRIZE        = "ejemplo:1 postre de obsequio almorzando ";        // texto libre
+    const REDIRECT_URL = "https://www.facebook.com/profile.php?id=61581522908261"; // Facebook o Instagram
+    /********************************************************/
 
-document.getElementById("skip").onclick=()=>location.href=redirectUrl;
+    const playButton = document.getElementById("playButton");
+    const skipButton = document.getElementById("skipButton");
+    const messageBox = document.getElementById("message");
 
-document.getElementById("play").onclick=()=>{
-  if(!canPlay()){
-    alert("Ya participaste hoy");
-    location.href=redirectUrl;
-    return;
-  }
+    const STORAGE_KEY = "lastPlay_" + BUSINESS_ID;
 
-  localStorage.setItem(storageKey,Date.now());
-  msg.innerHTML="🎰 Jugando...";
-
-  setTimeout(()=>{
-    if(Math.random()<0.5){
-      msg.innerHTML="🎉 ¡Ganaste! Abriendo WhatsApp...";
-      const text=`¡Hola! Gané el sorteo de ${prize}.`;
-      window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(text)}`,"_blank");
-      location.href=redirectUrl;
-    }else{
-      msg.innerHTML="😢 No ganaste esta vez";
-      setTimeout(()=>location.href=redirectUrl,2000);
+    function canPlay() {
+      const lastPlay = localStorage.getItem(STORAGE_KEY);
+      if (!lastPlay) return true;
+      const hours = (Date.now() - parseInt(lastPlay, 10)) / (1000 * 60 * 60);
+      return hours >= 24;
     }
-  },2500);
-}
-</script>
+
+    function savePlay() {
+      localStorage.setItem(STORAGE_KEY, Date.now().toString());
+    }
+
+    function redirectToBusiness(seconds = 2) {
+      setTimeout(() => {
+        window.location.href = REDIRECT_URL;
+      }, seconds * 1000);
+    }
+
+    function buildWhatsAppUrl() {
+      const text =
+        `¡Hola! He ganado el sorteo de ${PRIZE} en CaribeSurFlyer.\n` +
+        `Según las reglas:\n` +
+        `- Debo enviar este mensaje antes de canjear (mínimo 2h después).\n` +
+        `- Tengo hasta 1 mes para canjearlo.\n` +
+        `Gracias.`;
+
+      return "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(text);
+    }
+
+    skipButton.addEventListener("click", () => {
+      window.location.href = REDIRECT_URL;
+    });
+
+    playButton.addEventListener("click", () => {
+
+      if (!canPlay()) {
+        alert("Ya participaste hoy.");
+        redirectToBusiness(0);
+        return;
+      }
+
+      savePlay();
+      messageBox.innerHTML = "🎰 Jugando...";
+
+      setTimeout(() => {
+        const win = Math.random() < 0.5; // 50% exacto
+
+        if (win) {
+          messageBox.innerHTML = "🎉 ¡Ganaste! Abriendo WhatsApp...";
+          window.open(buildWhatsAppUrl(), "_blank");
+          redirectToBusiness(1);
+        } else {
+          messageBox.innerHTML = "😢 No ganaste esta vez.";
+          redirectToBusiness(2);
+        }
+      }, 2500);
+    });
+  </script>
 
 </body>
 </html>
