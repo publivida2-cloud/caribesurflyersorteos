@@ -41,14 +41,14 @@
 
 <body>
 
-  <h1>🎉 Juega y gana con CaribeSurFlyer 🎉</h1>
+  <h1>🎉 Juega y gana con CaribeSurFlyer - Play and win with CahuitaFlyer 🎉</h1>
 
   <p>
-    Escanea y prueba tu suerte.<br>
+    Prueba tu suerte - Try your luck - .<br>
     Si no deseas jugar, puedes ir directamente al negocio.
   </p>
 
-  <button id="playButton">🎲 JUGAR</button>
+  <button id="playButton">🎲 JUGAR-Play</button>
   <button id="skipButton">➡️ IR DIRECTO</button>
 
   <div class="message" id="message"></div>
@@ -90,8 +90,8 @@
       const text =
         `¡Hola! He ganado el sorteo de ${PRIZE} en CaribeSurFlyer.\n` +
         `Según las reglas:\n` +
-        `- Debo enviar este mensaje antes de canjear (mínimo 2h después).\n` +
-        `- Tengo hasta 1 mes para canjearlo.\n` +
+        `- Debo enviar este mensaje antes de canjear (mínimo 2h después) - I must send this message before redeeming (at least 2 hours later).\n` +
+        `- Tengo hasta 1 mes para canjearlo - I have up to 1 month to redeem it\n` +
         `Gracias.`;
 
       return "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(text);
@@ -104,7 +104,7 @@
     playButton.addEventListener("click", () => {
 
       if (!canPlay()) {
-        alert("Ya participaste hoy.");
+        alert("Ya Ya participaste hoy - You already participated today.);
         redirectToBusiness(0);
         return;
       }
@@ -120,7 +120,7 @@
           window.open(buildWhatsAppUrl(), "_blank");
           redirectToBusiness(1);
         } else {
-          messageBox.innerHTML = "😢 No ganaste esta vez.";
+          messageBox.innerHTML = "😢 No ganaste esta vez - You didn't win this time";
           redirectToBusiness(2);
         }
       }, 2500);
@@ -129,3 +129,4 @@
 
 </body>
 </html>
+
