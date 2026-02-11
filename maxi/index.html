@@ -41,10 +41,10 @@
 
 <body>
 
-  <h1>🎉 Juega y gana con CaribeSurFlyer 🎉</h1>
+  <h1>🎉 Juega y gana con CaribeSurFlyer - Play and win with CaribeSurFlyer 🎉</h1>
 
   <p>
-    Prueba tu suerte - Try your luck.<br>
+    Prueba tu suerte.Try your luck<br>
     Si no deseas jugar, puedes ir directamente al negocio.
   </p>
 
@@ -59,7 +59,7 @@
      ********************************************************/
     const BUSINESS_ID  = "maxi";        // sin espacios, sin tildes
     const WHATSAPP     = "50686654845";             // solo números
-    const PRIZE        = "10% de descuento";        // texto libre
+    const PRIZE        = "10% de descuento en la cuenta";        // texto libre
     const REDIRECT_URL = "https://www.instagram.com/maxismanzanillo"; // Facebook o Instagram
     /********************************************************/
 
@@ -88,10 +88,10 @@
 
     function buildWhatsAppUrl() {
       const text =
-        `¡Hola! He ganado el sorteo de ${PRIZE} en CaribeSurFlyer.\n` +
+        `¡Hola! He ganado el sorteo de ${PRIZE} en caribeSurFlyer.\n` +
         `Según las reglas:\n` +
-        `- Debo enviar este mensaje antes de canjear (mínimo 2h después).\n` +
-        `- Tengo hasta 1 mes para canjearlo.\n` +
+        `- Debo enviar este mensaje antes de canjear (mínimo 2h después)-I must send this message before redeeming (at least 2 hours later).\n` +
+        `- Tengo hasta 1 mes para canjearlo - I have up to 1 month to redeem it.\n` +
         `Gracias.`;
 
       return "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(text);
@@ -104,7 +104,7 @@
     playButton.addEventListener("click", () => {
 
       if (!canPlay()) {
-        alert("Ya participaste hoy.You already participated today");
+        alert("Ya participaste hoy. You already participated today");
         redirectToBusiness(0);
         return;
       }
@@ -120,7 +120,7 @@
           window.open(buildWhatsAppUrl(), "_blank");
           redirectToBusiness(1);
         } else {
-          messageBox.innerHTML = "😢 No ganaste esta vez - You didn't win this time.";
+          messageBox.innerHTML = "😢 No ganaste esta vez.You didn't win this time";
           redirectToBusiness(2);
         }
       }, 2500);
@@ -129,4 +129,7 @@
 
 </body>
 </html>
+
+
+
 
