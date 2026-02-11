@@ -44,11 +44,11 @@
   <h1>🎉 Juega y gana con CaribeSurFlyer 🎉</h1>
 
   <p>
-    Escanea y prueba tu suerte.<br>
+    Prueba tu suerte - Try your luck.<br>
     Si no deseas jugar, puedes ir directamente al negocio.
   </p>
 
-  <button id="playButton">🎲 JUGAR</button>
+  <button id="playButton">🎲 JUGAR-PLAY</button>
   <button id="skipButton">➡️ IR DIRECTO</button>
 
   <div class="message" id="message"></div>
@@ -104,7 +104,7 @@
     playButton.addEventListener("click", () => {
 
       if (!canPlay()) {
-        alert("Ya participaste hoy.");
+        alert("Ya participaste hoy.You already participated today");
         redirectToBusiness(0);
         return;
       }
@@ -120,7 +120,7 @@
           window.open(buildWhatsAppUrl(), "_blank");
           redirectToBusiness(1);
         } else {
-          messageBox.innerHTML = "😢 No ganaste esta vez.";
+          messageBox.innerHTML = "😢 No ganaste esta vez - You didn't win this time.";
           redirectToBusiness(2);
         }
       }, 2500);
@@ -129,3 +129,4 @@
 
 </body>
 </html>
+
